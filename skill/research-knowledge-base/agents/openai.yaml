@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Knowledge Base"
+  short_description: "构建并维护 Zotero、Obsidian 与 Codex 科研知识库"
+  default_prompt: "Use $research-knowledge-base to initialize and maintain my research literature knowledge base."
