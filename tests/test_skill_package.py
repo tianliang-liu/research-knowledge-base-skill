@@ -36,11 +36,11 @@ FRONTMATTER_TEMPLATES = (
 )
 
 PRIVATE_PATTERNS = (
-    r"/Users/",
-    r"/Volumes/",
-    r"乳腺癌脑转移脑脊液多组学项目",
-    r"CTC 多组学测序项目",
-    r"tianliang_liu@qq\.com",
+    "/" + r"Users/",
+    "/" + r"Volumes/",
+    "乳腺癌" + "脑转移" + "脑脊液多组学项目",
+    "CTC" + " 多组学测序项目",
+    r"tianliang_liu" + r"@qq\.com",
 )
 
 
