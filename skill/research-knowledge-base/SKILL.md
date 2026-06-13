@@ -1,85 +1,114 @@
 ---
 name: research-knowledge-base
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: Use when researchers want to initialize, structure, populate, or maintain an Obsidian literature knowledge base; deeply read original studies or reviews from Zotero, PDFs, DOI, PMID, or URLs; organize project evidence maps, topic MOCs, methods, and syntheses; or integrate real-time Zotero reading questions.
 ---
 
 # Research Knowledge Base
 
 ## Overview
 
-[TODO: 1-2 sentences explaining what this skill enables]
+Build a research knowledge base in which Zotero keeps source papers and PDFs, Obsidian keeps verified research knowledge, and Codex performs structured reading, checking, linking, and synthesis.
 
-## Structuring This Skill
+Keep one canonical detailed note per paper. Reuse that note across projects instead of duplicating literature summaries.
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+## Select the Workflow
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" -> "Reading" -> "Creating" -> "Editing"
-- Structure: ## Overview -> ## Workflow Decision Tree -> ## Step 1 -> ## Step 2...
+| User request | Read | Execute |
+|---|---|---|
+| Initialize or restructure a vault | `references/architecture.md` | Inspect the existing vault, then run or adapt `scripts/init_knowledge_base.py`. |
+| Read an original study or review | `references/literature-workflow.md` | Retrieve metadata and full text, select the correct template, create the canonical note, then synthesize upward. |
+| Process Zotero real-time questions | `references/zotero-realtime-qa.md` | Read the paper and `阅读追问_QA`; verify every AI answer before integration. |
+| Create a new project | `references/architecture.md` | Search existing literature notes first, then build an evidence map and gap list. |
+| Audit or maintain the vault | `references/maintenance.md` | Review statuses, missing links, unresolved questions, and project evidence gaps. |
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" -> "Merge PDFs" -> "Split PDFs" -> "Extract Text"
-- Structure: ## Overview -> ## Quick Start -> ## Task Category 1 -> ## Task Category 2...
+Read only the references needed for the current request.
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" -> "Colors" -> "Typography" -> "Features"
-- Structure: ## Overview -> ## Guidelines -> ## Specifications -> ## Usage...
+## Inspect Before Editing
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" -> numbered capability list
-- Structure: ## Overview -> ## Core Capabilities -> ### 1. Feature -> ### 2. Feature...
+1. Locate the Obsidian vault and the intended knowledge-base root.
+2. List the existing folders, templates, project pages, and literature notes.
+3. Preserve unrelated notes and user customizations.
+4. Check whether Zotero, a local PDF, DOI, PMID, URL, or exported note is available.
+5. State assumptions when the research profile or destination cannot be inferred.
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+Do not create a second competing knowledge-base structure inside an established vault.
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+## Initialize a Knowledge Base
 
-## [TODO: Replace with the first main section based on chosen structure]
+Run:
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
+```bash
+python3 scripts/init_knowledge_base.py \
+  --destination "/path/to/obsidian-vault" \
+  --name "My Research Knowledge Base"
+```
 
-## Resources (optional)
+Use `--merge` only when the user explicitly wants missing template files added to an existing target. Merge mode must not overwrite existing files.
 
-Create only the resource directories this skill actually needs. Delete this section if no resources are required.
+After initialization:
 
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
+1. Customize the research profile, initial projects, topics, and methods.
+2. Tell the user to set the Obsidian Templates folder to `<knowledge-base>/90_Templates`.
+3. Do not automatically modify global Obsidian settings unless explicitly requested.
 
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
+## Process Literature
 
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
+1. Identify the paper and retrieve reliable metadata.
+2. Read the full text whenever available; do not present an abstract-only summary as a full-paper reading.
+3. Determine article type:
+   - Original study: use `90_Templates/文献笔记模板.md`.
+   - Review, perspective, primer, or clinical review: use `90_Templates/综述文献笔记模板.md`.
+4. Create or update one canonical note in `01_Literature`.
+5. Preserve traceability with DOI, PMID/PMCID, Zotero item key, attachment key, and source links when available.
+6. Separate author claims, source evidence, and the researcher's interpretation.
+7. Integrate high-value content into project, topic, method, or synthesis pages.
 
-**Note:** Scripts may be executed without loading into context, but can still be read by Codex for patching or environment adjustments.
+Never invent inaccessible metadata, methods, figures, sample sizes, page locations, or findings. Mark unresolved items for verification.
 
-### references/
-Documentation and reference material intended to be loaded into context to inform Codex's process and thinking.
+## Handle Real-Time Zotero Questions
 
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
+Treat content generated by PapersGPT or another reading assistant as a provisional answer, not as paper evidence.
 
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Codex should reference while working.
+For each entry in `阅读追问_QA`:
 
-### assets/
-Files not intended to be loaded into context, but rather used within the output Codex produces.
+1. Preserve the researcher's original question.
+2. Locate the cited page, section, figure, table, or source text.
+3. Check the provisional AI answer against the paper.
+4. Correct overstatement, unsupported causality, or evidence-level confusion.
+5. Add the verified explanation to the most relevant section of the canonical literature note.
+6. Keep unresolved questions explicit.
 
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
+Do not require an OpenAI API key. Zotero AI plugins, local models, and MCP connections are optional input routes; the verification workflow remains the same.
 
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
+## Create a New Project
 
----
+1. Define the project position, core questions, and working hypotheses.
+2. Search `01_Literature` before requesting new reading.
+3. Classify existing notes as core evidence, background, methods, or peripheral evidence.
+4. Link each paper with a short explanation of relevance.
+5. Build an evidence table containing question, evidence, strength, gap, and next action.
+6. Re-read a paper only when it materially affects study design, analysis, or interpretation.
 
-**Not every skill requires all three types of resources.**
+The project page is a dynamic evidence map, not a second literature-note collection.
+
+## Completion Checks
+
+Before reporting completion:
+
+- Confirm the target files exist.
+- Check frontmatter and article type.
+- Check that required sections contain source-grounded content.
+- Scan for unresolved placeholders introduced by the current task.
+- Check wikilink targets when the vault is available.
+- Confirm existing user files were not overwritten.
+- Change `status` to `synthesized` only after an actual higher-level integration.
+- Report inaccessible sources and remaining uncertainty.
+
+## Bundled Resources
+
+- `scripts/init_knowledge_base.py`: safe vault initializer.
+- `assets/vault-template/`: copyable Obsidian structure and templates.
+- `references/architecture.md`: folder model, statuses, and reuse rules.
+- `references/literature-workflow.md`: deep-reading and synthesis standards.
+- `references/zotero-realtime-qa.md`: real-time question verification.
+- `references/maintenance.md`: recurring audit workflow.
